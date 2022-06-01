@@ -4,6 +4,11 @@ NetPen is a Automated Penetration Testing tool
 # Language Used
 Python 3.x
 
+#Installation
+ 1. sudo git clone 
+ 2. cd NetPen
+ 3. pip3 install -r Requirements.txt 
+ 
 # Usage
 You need to be super user to avail the features of this tool.
 

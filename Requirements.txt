@@ -1,0 +1,12 @@
+pipe-subprocess
+pexpect
+progressbar
+colorama
+readline
+regex
+beautifulsoup4
+bs4
+python-time
+os-sys
+pycopy-xml.etree.ElementTree
+

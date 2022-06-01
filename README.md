@@ -5,7 +5,7 @@ NetPen is a Automated Penetration Testing tool
 Python 3.x
 
 #Installation
- 1. sudo git clone 
+ 1. sudo git clone https://github.com/MonkHacker1/NetPen.git
  2. cd NetPen
  3. pip3 install -r Requirements.txt 
  

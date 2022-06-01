@@ -133,7 +133,7 @@ if resp =='1':
     print(Fore.YELLOW+"Nmap Scanning In Progress.....")
     print(Fore.YELLOW+"Please Wait")
     print(Fore.RESET+"")
-    p = subprocess.Popen(["nmap","-sS","-Pn","-sV", "-v", ip_addr, "-p "+ports,"-oX",file_name], stdout=subprocess.PIPE)
+    p = subprocess.Popen(["nmap","-Pn","-sS","-sV", "-v", ip_addr, "-p "+ports,"-oX",file_name], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
     print(Fore.GREEN+"")
     try:
@@ -186,7 +186,7 @@ if resp =='1':
 elif resp =='2':
     print(Fore.YELLOW+"Nmap Scanning In Progress.....")
     print(Fore.YELLOW+"Please Wait.")
-    p = subprocess.Popen(["nmap","-sU","-Pn", "-v", ip_addr, "-p "+ports,"-oX",file_name], stdout=subprocess.PIPE)
+    p = subprocess.Popen(["nmap","-Pn","-sU", "-v", ip_addr, "-p "+ports,"-oX",file_name], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
     msg = output.decode('utf-8').strip()
     #print(msg)
@@ -239,7 +239,7 @@ elif resp =='2':
 elif resp =='3':
     print(Fore.YELLOW+"Nmap Scanning In Progress.....")
     print(Fore.YELLOW+"Please Wait.")
-    p = subprocess.Popen(["nmap","-sV","--script=vuln", ip_addr, "-p "+ports,"-oX",file_name], stdout=subprocess.PIPE)
+    p = subprocess.Popen(["nmap","-Pn","-sV","--script=vuln", ip_addr, "-p "+ports,"-oX",file_name], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
     msg = output.decode('utf-8').strip()
     #print(msg)

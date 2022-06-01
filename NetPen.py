@@ -186,7 +186,7 @@ if resp =='1':
 elif resp =='2':
     print(Fore.YELLOW+"Nmap Scanning In Progress.....")
     print(Fore.YELLOW+"Please Wait.")
-    p = subprocess.Popen(["nmap","-Pn","-sU", "-v", ip_addr, "-p "+ports,"-oX",file_name], stdout=subprocess.PIPE)
+    p = subprocess.Popen(["nmap","-Pn","-sU","-v", ip_addr, "-p "+ports,"-oX",file_name], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
     msg = output.decode('utf-8').strip()
     #print(msg)
@@ -295,30 +295,36 @@ elif resp =='3':
     #print(msg)
         
 print(Fore.MAGENTA+"Nmap Scanning Completed!")
-print(Fore.MAGENTA+"Collecting CVES")
+if resp=='3':
+    print(Fore.MAGENTA+"Collecting CVES")
 
-content = []
-cves = []
+    content = []
+    cves = []
     # Read the XML file
-print(Fore.GREEN+"===========================================================================================")
-with open(file_name, "r") as file:
+    print(Fore.GREEN+"===========================================================================================")
+    try:
+        with open(file_name, "r") as file:
     # Read each line in the file, readlines() returns a list of lines
-    content = file.readlines()
+            content = file.readlines()
     # Combine the lines in the list into a string
-    content = "".join(content)
-    bs_content = bs(content,features="xml")
-    result = bs_content.find_all("elem")
-    third_child = bs_content.find_all("elem", {"key": "id"})
-    cve_list=[]
-    for cve_tags in third_child:
-        cve_list.append(cve_tags)
-    cve_list=str(cve_list)
-    cves=re.findall("CVE-\d{4}-\d{4,7}",cve_list)
+            content = "".join(content)
+            bs_content = bs(content,features="xml")
+            result = bs_content.find_all("elem")
+            third_child = bs_content.find_all("elem", {"key": "id"})
+            cve_list=[]
+            for cve_tags in third_child:
+                cve_list.append(cve_tags)
+            cve_list=str(cve_list)
+            cves=re.findall("CVE-\d{4}-\d{4,7}",cve_list)
     #print(cves)
-    for cve in cves:
-    	print(Fore.RED+"[+]"+Fore.RESET,Fore.YELLOW+cve)
+            for cve in cves:
+    	        print(Fore.RED+"[+]"+Fore.RESET,Fore.YELLOW+cve)
+    except:
+        print(Fore.YELLOW+"[-] NO CVE FOUND")
 
-print(Fore.GREEN+"===========================================================================================")
+    print(Fore.GREEN+"===========================================================================================")
+elif resp=='1' or resp=='2':
+    sys.exit()
 
 
 global use_exploit
@@ -332,15 +338,10 @@ def main():
     child.expect('.*>')
     child.sendline('use ' + 'exploit/multi/http/php_cgi_arg_injection')
     child.interact()
-    child.expect('.*>')
-    child.sendline('SET RHOSTS '+str(ip_addr))
-    #print(child.before.decode())
-    child.interact()
-    child.expect('.*>')
-    child.sendline('run')
-    child.interact()
 if __name__ == '__main__':
     main()
+
+
 
 
 

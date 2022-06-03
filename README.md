@@ -9,13 +9,14 @@ NetPen is a networking penetration testing tool developed by two penetration tes
 # Language Used
   Python 3.x
 
-#Installation
- 1. sudo git clone https://github.com/MonkHacker1/NetPen.git
+# Installation
+Use the following commands to Install NetPen
+ 1. `sudo git clone https://github.com/MonkHacker1/NetPen.git`
  2. cd NetPen
  3. pip3 install -r Requirements.txt 
  
 # Usage
-You need to be super user to avail the features of this tool.
+Use the following commands to use NetPen.
 1. sudo python3 NetPen.py
 2. Enter Target IP address
 3. Enter Port Range

@@ -26,4 +26,7 @@ You need to be super user to avail the features of this tool.
 
 # About Us
 Qammar Uz Zamman and Aamir Hussain, students of  B.Tech (ITE) in School of Engineering and Technology, Baba Ghulam Shah Badshah University, Rajouri, J&K, during the academic year 2018- 2022.
-[Qammar Uz Zamman](https://www.google.com)
+Connect with us on our LinkedIn:
+
+[Qammar Uz Zamman](https://www.linkedin.com/in/qammarbhat)
+[Aamir Hussain](https://www.linkedin.com/in/aamir-hussain-wani-a87304199)
